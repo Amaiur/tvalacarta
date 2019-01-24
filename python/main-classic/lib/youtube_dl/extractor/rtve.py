@@ -110,11 +110,12 @@ class RTVEALaCartaIE(InfoExtractor):
     }]
 
     def _real_initialize(self):
-        user_agent_b64 = base64.b64encode(std_headers['User-Agent'].encode('utf-8')).decode('utf-8')
-        manager_info = self._download_json(
-            'http://www.rtve.es/odin/loki/' + user_agent_b64,
-            None, 'Fetching manager info')
-        self._manager = manager_info['manager']
+        # RTVE quitó de su web el archivo json en la url http://www.rtve.es/odin/loki/ y por eso falla este extractor.
+        # Por suerte, es aun accesible en archive.org
+        # https://web.archive.org/web/20120615204408/http://www.rtve.es/odin/loki/
+        # Es una simple linea: {"manager":"default"}
+        # Asi que basta con poner la cadena 'default' directamente, y los videos de RTVE a la carta ya se pueden ver.
+        self._manager = 'default'
 
     def _real_extract(self, url):
         mobj = re.match(self._VALID_URL, url)
